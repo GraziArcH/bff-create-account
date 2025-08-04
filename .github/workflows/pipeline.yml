@@ -1,0 +1,31 @@
+name: Deploy Dockerfile
+on: 
+  push: 
+    branches: [master]
+
+env:
+  IMAGE: bff-create-account:latest
+
+jobs:
+  build:
+    name: Push Register
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Checkout master
+      uses: actions/checkout@master
+    
+    - name: Build container image
+      run: docker build --tag $IMAGE .
+      
+    - name: Install doctl
+      uses: digitalocean/action-doctl@v2
+      with:
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+
+    - name: Push Image To Digitalocean
+      run: |
+        doctl registry login
+        docker tag $IMAGE registry.digitalocean.com/arch/$IMAGE
+        docker push registry.digitalocean.com/arch/$IMAGE
