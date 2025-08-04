@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+
+  bff-create-account:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: bff-create-account
+    restart: always
+    env_file:
+      - .env
+
